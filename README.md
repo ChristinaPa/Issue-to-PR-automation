@@ -19,8 +19,6 @@ New Issue Opened → AI Agent Reads Issue → Explores Codebase → Implements F
 
 ```
 .github/
-├── agents/
-│   └── ms-learn-coder.agent.md    # Custom Copilot agent with Microsoft Learn integration
 ├── aw/
 │   └── actions-lock.json          # Pinned action versions for reproducibility
 └── workflows/
@@ -49,17 +47,6 @@ The workflow uses [safe outputs](https://github.github.com/gh-aw/reference/safe-
 - **`create-pull-request`** — Opens a draft PR with the implemented fix
 - **`add-comment`** — Posts up to 2 comments on the issue (progress updates or clarification requests)
 - **`add-labels`** — Labels the issue `in-progress` or `agent-working`
-
-## Custom Agent: Microsoft Learn Coder
-
-The repository includes a custom Copilot agent (`.github/agents/ms-learn-coder.agent.md`) that can be integrated into the workflow to augment the AI with [Microsoft Learn](https://learn.microsoft.com) documentation via MCP (Model Context Protocol).
-
-When enabled, the agent:
-- Searches Microsoft Learn for relevant documentation, API references, and best practices
-- Cross-references official docs with existing codebase patterns
-- Cites relevant Microsoft Learn articles in PR descriptions
-
-This is useful when issues involve Azure services, .NET, Java, or any Microsoft technology stack.
 
 ## Setup
 
