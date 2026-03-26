@@ -123,6 +123,7 @@ function renderTickets(tickets) {
         <span class="badge badge-priority-${ticket.priority}">${ticket.priority}</span>
         <span class="badge badge-status-${ticket.status}">${ticket.status}</span>
         <span class="badge badge-confidence">${ticket.routing.confidence} confidence</span>
+        <span class="ticket-timestamp">Created: ${timeAgo(ticket.createdAt)}</span>
       </div>
       ${ticket.routing.matchedKeywords.length > 0
         ? `<p class="routing-info">Matched: ${ticket.routing.matchedKeywords.map(k => escapeHtml(k)).join(", ")}</p>`
@@ -155,4 +156,16 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.appendChild(document.createTextNode(text));
   return div.innerHTML;
+}
+
+// --- Human-readable relative time ---
+function timeAgo(isoString) {
+  const seconds = Math.floor((Date.now() - new Date(isoString)) / 1000);
+  if (seconds < 60) return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days !== 1 ? "s" : ""} ago`;
 }
