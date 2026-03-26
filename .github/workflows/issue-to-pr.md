@@ -13,6 +13,7 @@ safe-outputs:
     title-prefix: "[issue-fix] "
     labels: [automated, issue-fix]
     draft: true
+    protected-files: allowed
     github-token: ${{ secrets.COPILOT_GITHUB_TOKEN }}
   add-comment:
     max: 2
