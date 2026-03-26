@@ -2,6 +2,8 @@
 
 Automatically assign newly opened GitHub issues to an AI coding agent that analyzes the issue, implements a fix, and opens a draft pull request — powered by [GitHub Agentic Workflows](https://github.github.com/gh-aw/).
 
+This repository also includes a **Support Ticket Portal** — a full-stack web application where users submit support tickets that are automatically routed to the right technical team based on keyword analysis.
+
 ## How It Works
 
 ```
@@ -20,10 +22,23 @@ New Issue Opened → AI Agent Reads Issue → Explores Codebase → Implements F
 ```
 .github/
 ├── aw/
-│   └── actions-lock.json          # Pinned action versions for reproducibility
+│   └── actions-lock.json              # Pinned action versions for reproducibility
 └── workflows/
-    ├── issue-to-pr.md             # Agentic workflow definition (natural language)
-    └── issue-to-pr.lock.yml       # Compiled GitHub Actions workflow (auto-generated)
+    ├── issue-to-pr.md                 # Agentic workflow definition (natural language)
+    └── issue-to-pr.lock.yml           # Compiled GitHub Actions workflow (auto-generated)
+backend/
+├── server.js                          # Express server entry point
+├── package.json                       # Backend dependencies
+├── data/
+│   └── teams.js                       # Team definitions and keyword-based routing logic
+├── middleware/
+│   └── validation.js                  # Input validation and sanitization
+└── routes/
+    └── tickets.js                     # REST API endpoints for tickets
+frontend/
+├── index.html                         # Ticket submission form and ticket list UI
+├── styles.css                         # Responsive styles with priority/status badges
+└── app.js                             # Client-side logic with XSS protection
 ```
 
 ## Workflow Details
@@ -48,7 +63,50 @@ The workflow uses [safe outputs](https://github.github.com/gh-aw/reference/safe-
 - **`add-comment`** — Posts up to 2 comments on the issue (progress updates or clarification requests)
 - **`add-labels`** — Labels the issue `in-progress` or `agent-working`
 
-## Setup
+## Support Ticket Application
+
+A full-stack web app for submitting and routing support tickets.
+
+### Features
+
+- **Ticket submission** with title, description, priority, and optional category
+- **Automatic routing** to one of 6 teams (Frontend, Backend, DevOps, Security, Data Engineering, Mobile) based on keyword matching
+- **Confidence scoring** — each routing decision includes a confidence level (high/medium/low)
+- **Filtering** — filter tickets by status and team
+- **Input validation** — server-side validation with sanitized inputs
+- **Security** — Helmet headers, CORS, JSON size limits, and XSS-safe rendering
+
+### Running the Application
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+The API starts on `http://localhost:3000`. Open `frontend/index.html` in a browser.
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/tickets` | List tickets (filter by `status`, `team`, `priority`) |
+| `GET` | `/api/tickets/teams` | List available teams |
+| `GET` | `/api/tickets/:id` | Get a single ticket |
+| `POST` | `/api/tickets` | Create and auto-route a ticket |
+| `PATCH` | `/api/tickets/:id` | Update ticket status |
+| `GET` | `/api/health` | Health check |
+
+### Routing Logic
+
+Tickets are routed by matching keywords in the title and description against team keyword lists. If a category is explicitly selected, it takes priority. Each routing result includes:
+- The assigned **team**
+- A **confidence** level (high = 3+ keyword matches, medium = 2, low = 1 or default)
+- The **matched keywords** that determined the routing
+
+---
+
+## Agentic Workflow Setup
 
 ### Prerequisites
 
@@ -113,6 +171,8 @@ git push
 - [GitHub Agentic Workflows](https://github.github.com/gh-aw/) — Repository automation with AI coding agents
 - [GitHub Copilot](https://github.com/features/copilot) — AI coding engine
 - [GitHub Actions](https://github.com/features/actions) — CI/CD and workflow execution
+- [Express.js](https://expressjs.com/) — Backend API framework
+- [Helmet](https://helmetjs.github.io/) — HTTP security headers
 
 ## Resources
 

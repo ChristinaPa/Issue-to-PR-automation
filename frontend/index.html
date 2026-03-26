@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Ticket Portal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Support Ticket Portal</h1>
+      <p>Submit a ticket and it will be automatically routed to the right team</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+
+      <!-- Ticket Submission Form -->
+      <section class="card form-section">
+        <h2>Submit a Ticket</h2>
+        <form id="ticketForm">
+          <div class="form-group">
+            <label for="title">Title <span class="required">*</span></label>
+            <input type="text" id="title" name="title" placeholder="Brief summary of the issue" required minlength="5" maxlength="200">
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description <span class="required">*</span></label>
+            <textarea id="description" name="description" rows="5" placeholder="Describe the issue in detail..." required minlength="10" maxlength="5000"></textarea>
+            <span class="char-count"><span id="charCount">0</span> / 5000</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <select id="priority" name="priority">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Category (optional)</label>
+              <select id="category" name="category">
+                <option value="">Auto-detect</option>
+                <option value="frontend">Frontend</option>
+                <option value="backend">Backend</option>
+                <option value="devops">DevOps</option>
+                <option value="security">Security</option>
+                <option value="data">Data Engineering</option>
+                <option value="mobile">Mobile</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactEmail">Contact Email (optional)</label>
+            <input type="email" id="contactEmail" name="contactEmail" placeholder="your.email@company.com">
+          </div>
+
+          <button type="submit" id="submitBtn">Submit Ticket</button>
+        </form>
+
+        <!-- Success/Error Messages -->
+        <div id="formMessage" class="message hidden"></div>
+      </section>
+
+      <!-- Ticket List -->
+      <section class="card list-section">
+        <div class="list-header">
+          <h2>Recent Tickets</h2>
+          <button id="refreshBtn" class="btn-secondary">Refresh</button>
+        </div>
+
+        <div class="filters">
+          <select id="filterStatus">
+            <option value="">All Statuses</option>
+            <option value="open">Open</option>
+            <option value="in-progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="closed">Closed</option>
+          </select>
+          <select id="filterTeam">
+            <option value="">All Teams</option>
+          </select>
+        </div>
+
+        <div id="ticketList" class="ticket-list">
+          <p class="empty-state">No tickets yet. Submit one to get started!</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
