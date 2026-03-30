@@ -115,7 +115,10 @@ function renderTickets(tickets) {
     <div class="ticket-item">
       <div class="ticket-item-header">
         <h3>${escapeHtml(ticket.title)}</h3>
-        <span class="ticket-id">#${ticket.id}</span>
+        <div class="ticket-header-right">
+          <span class="ticket-id">#${ticket.id}</span>
+          <button class="btn-delete" onclick="deleteTicket(${ticket.id})" title="Delete ticket">✕</button>
+        </div>
       </div>
       <p class="ticket-description">${escapeHtml(ticket.description)}</p>
       <div class="ticket-meta">
@@ -129,6 +132,28 @@ function renderTickets(tickets) {
         : ""}
     </div>
   `).join("");
+}
+
+// --- Delete Ticket ---
+async function deleteTicket(id) {
+  if (!confirm(`Are you sure you want to delete ticket #${id}? This cannot be undone.`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/tickets/${id}`, { method: "DELETE" });
+    const result = await res.json();
+
+    if (!res.ok) {
+      showMessage(result.error || "Failed to delete ticket", "error");
+      return;
+    }
+
+    showMessage(`Ticket #${id} deleted successfully`, "success");
+    loadTickets();
+  } catch {
+    showMessage("Failed to connect to the server. Is the backend running?", "error");
+  }
 }
 
 // --- Filters ---

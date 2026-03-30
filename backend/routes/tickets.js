@@ -72,6 +72,17 @@ router.post("/", validateTicket, (req, res) => {
   });
 });
 
+// DELETE /api/tickets/:id — delete a ticket
+router.delete("/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const index = tickets.findIndex(t => t.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: "Ticket not found" });
+  }
+  tickets.splice(index, 1);
+  res.json({ message: `Ticket #${id} deleted successfully`, id });
+});
+
 // PATCH /api/tickets/:id — update ticket status
 router.patch("/:id", (req, res) => {
   const ticket = tickets.find(t => t.id === parseInt(req.params.id, 10));
