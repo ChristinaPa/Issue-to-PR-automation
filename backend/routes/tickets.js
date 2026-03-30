@@ -28,6 +28,22 @@ router.get("/teams", (req, res) => {
   res.json(teams.map(t => ({ id: t.id, name: t.name, description: t.description })));
 });
 
+// GET /api/tickets/search?q= — search tickets by title or description
+router.get("/search", (req, res) => {
+  const { q } = req.query;
+
+  if (!q || typeof q !== "string" || q.trim().length === 0) {
+    return res.status(400).json({ error: "Query parameter 'q' is required" });
+  }
+
+  const query = q.trim().toLowerCase();
+  const results = tickets
+    .filter(t => t.title.toLowerCase().includes(query) || t.description.toLowerCase().includes(query))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  res.json({ count: results.length, tickets: results });
+});
+
 // GET /api/tickets/:id — get a single ticket
 router.get("/:id", (req, res) => {
   const ticket = tickets.find(t => t.id === parseInt(req.params.id, 10));
