@@ -14,6 +14,7 @@ const teams = [
   {
     id: "devops",
     name: "DevOps Team",
+    priorityKeywords: ["docker", "kubernetes", "k8s"],
     keywords: ["deploy", "deployment", "ci", "cd", "pipeline", "docker", "kubernetes", "k8s", "terraform", "aws", "azure", "gcp", "cloud", "infrastructure", "monitoring", "logging", "container", "helm", "jenkins", "github actions"],
     description: "Handles deployments, infrastructure, and CI/CD pipelines"
   },
@@ -44,6 +45,21 @@ function routeTicket(title, description, category) {
   const directMatch = teams.find(t => t.id === category);
   if (directMatch) {
     return { team: directMatch, confidence: "high", method: "category_match" };
+  }
+
+  // Check for high-priority keywords that unambiguously indicate a specific team,
+  // regardless of how many general keywords other teams match
+  for (const team of teams) {
+    if (!team.priorityKeywords) continue;
+    const matchedPriority = team.priorityKeywords.filter(kw => text.includes(kw));
+    if (matchedPriority.length > 0) {
+      return {
+        team,
+        confidence: "high",
+        method: "priority_keyword_match",
+        matchedKeywords: matchedPriority
+      };
+    }
   }
 
   // Score each team based on keyword matches
